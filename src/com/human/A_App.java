@@ -9,8 +9,10 @@ public class A_App {
         // 실행
         v.type1();
         System.out.println("=================");
+        v.type2();
         v.type3();
-
+        v.type4();
         v.type5();
+        v.type6();
     }
 }
