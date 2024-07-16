@@ -8,5 +8,9 @@ public class A_App {
         VariableType v = new VariableType();
         // 실행
         v.type1();
+        System.out.println("=================");
+        v.type3();
+
+        v.type5();
     }
 }
