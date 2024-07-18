@@ -5,16 +5,21 @@ import java.util.Scanner;
 public class Bmi {
     public static void main(String[] args) {
         Bmi b = new Bmi();
-        b.bmi();
+        // 메서드가 반복해서 실행 될수 있도록 코드를 작성 하세요!
+        while (true) {
+            b.bmi();
+        }
 
     }
-
+    
+    Scanner s = new Scanner(System.in);
+    
     public void bmi(){
+        
 
         // 여러개의 변수를 선언
         double height, weight, bmi;
         String bmiStr;
-        Scanner s = new Scanner(System.in);
         
         // 사용자로 부터 키와 몸무게를 입력 받아서 변수에 저장
         System.out.println("키(m) :");
@@ -48,7 +53,7 @@ public class Bmi {
         // 비만도출력
         System.out.printf("당신의 Bmi는 %.2f이고, %s입니다.\n", bmi, bmiStr);
 
-        s.close();
+        // s.close();
     }
 
 
