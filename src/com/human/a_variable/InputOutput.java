@@ -14,7 +14,7 @@ public class InputOutput {
 
     public void bmi(){
         // 사용자의 입력을 받기 위해서 Scanner 생성
-        Scanner scan = new Scanner(System.in);
+        Scanner scan = new Scanner(System.in, "MS949오");
         System.out.println("이름 : ");
         System.out.println( scan.nextLine() );
         System.out.print("키(m) : ");
