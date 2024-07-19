@@ -1,6 +1,6 @@
 package com.human;
 
-import com.human.a_variable.Variable;
+import a_variable.Variable;
 
 public class A_variableApp {
     public static void main(String[] args) {

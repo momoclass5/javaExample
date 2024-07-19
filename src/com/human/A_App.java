@@ -1,7 +1,7 @@
 package com.human;
 
-import com.human.a_variable.InputOutput;
-import com.human.a_variable.VariableType;
+import a_variable.InputOutput;
+import a_variable.VariableType;
 
 public class A_App {
     public static void main(String[] args) {

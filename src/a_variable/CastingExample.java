@@ -1,4 +1,4 @@
-package com.human.a_variable;
+package a_variable;
 
 public class CastingExample {
     public static void main(String[] args) {

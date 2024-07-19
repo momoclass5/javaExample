@@ -1,4 +1,4 @@
-package com.human.a_variable;
+package a_variable;
 
 public class VariableType {
     public void type1(){
