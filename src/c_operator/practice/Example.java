@@ -61,16 +61,71 @@ public class Example extends Object{
     }
 
     public void method3(){
-        int dan = 2;
+        // dan : 2~9
+        //int dan = 2;
         // for : 반복문
         // for (초기식; 조건식; 증감식;) {}
         // i는 1부터 10보다 작을때까지 실행해! 코드블럭이 끝날때마다 i값을 1씩 증가시켜
-        System.out.println(dan + "단");
-        for(int i=1; i < 10 ; i++){
-            // 1~9까지 반복실행
-            System.out.printf("%d * %d = %d\n", dan, i, dan*i);
+        //System.out.println(dan + "단");
+        for(int dan=2;dan<10;dan++){
+            for(int i=1; i < 10 ; i++){
+                // 1~9까지 반복실행
+                System.out.printf("%d * %d = %d\n", dan, i, dan*i);
+            }
         }
-
     }
 
+    // 3배수의 총합
+    public void method4() {
+        int res = 0;
+        for(int i=1;i<100;i++){
+            if(i%3 == 0){
+                res += i;
+                System.out.println(i);
+            }
+        }
+        System.out.println("res : " + res);
+    }
+
+    // 주사위
+    public void method5(){
+        while(true){
+
+            int i = (int)(Math.random()*6+1);
+            int j = (int)(Math.random()*6+1);
+            if(i+j == 5){
+                System.err.printf("(%d, %d)", i, j);
+                break;
+            }
+        }
+    }
+
+    // 별찍기
+    public void method6(){
+        // for(int i=0; i<5;i++){
+        //     for(int j=0;j<=i;j++){
+        //         System.out.print("*");
+        //     }
+        //     System.err.println();
+        // }
+
+        // for(int i=5; i>0;i--){
+        //     for(int j=0;j<=i;j++){
+        //         System.out.print("*");
+        //     }
+        //     System.err.println();
+        // }
+
+        for(int i=5; i>0;i--){
+            
+            for(int j=0;j<=5;j++){
+                if(j<i){
+                    System.out.print(" ");
+                } else {
+                    System.out.print("*");
+                }
+            }
+            System.err.println();
+        }
+    }
 }
