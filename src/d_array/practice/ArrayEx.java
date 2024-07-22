@@ -1,7 +1,39 @@
 package d_array.practice;
 
 public class ArrayEx {
+    public static void main(String[] args) {
+        ArrayEx ae = new ArrayEx();
+        ae.lotto3();
+    }
+    public void lotto3() {
+        int[] lotto = new int[6];
 
+        // 0 ~ 5
+        for(int i=0;i<lotto.length;i++){
+            // 1 ~ 47 까지의 수중 무작위수를 추출
+            int num = (int)(Math.random() * 47) + 1;
+            lotto[i] = num;
+
+            // 중복체크
+            // i의 값만큼 반복
+            for(int j=0; j<i; j++){
+                if(lotto[j] == num){
+                    System.out.println("lotto[j] : " + lotto[j] );
+                    System.out.println("num : " + num );
+                    System.out.println("중복발생=========================");
+                    // 중복발생
+                    i--;
+                    break;
+                }
+            }
+            System.out.println("i : " + i);
+            System.out.println("lotto : ");
+            for(int n : lotto){
+                System.out.print(n + " ");
+            }
+            System.out.println();
+        }
+    }
     
 
     public void lotto2() {

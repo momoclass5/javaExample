@@ -3,7 +3,24 @@ package d_array.practice;
 public class ArrayStringEx {
     public static void main(String[] args) {
         ArrayStringEx ase = new ArrayStringEx();
-        ase.method2();
+        //ase.method2();
+        ase.arraycopy();
+    }
+
+    /**
+     * 배열의 길이를 변경 할수 없으므로
+     * 새로운 배열을 만들고 값을 복사함!
+     */
+    public void arraycopy() {
+        int[] old = {1,2,3};
+        int[] newArray = new int[5];
+
+        for(int i=0;i<old.length;i++){
+            newArray[i] = old[i];
+        }
+        for(int i : newArray){
+            System.out.println(i);
+        }
     }
 
     /**
@@ -21,8 +38,11 @@ public class ArrayStringEx {
         strArray[2] = new String("Java");
 
         System.out.println(strArray[0].hashCode());
+        System.out.println(strArray[0].hashCode());
         System.out.println(strArray[1].hashCode());
-        System.out.println(strArray[2].hashCode());
+        System.out.println(System.identityHashCode(strArray[0]));
+        System.out.println(System.identityHashCode(strArray[1]));
+        System.out.println(System.identityHashCode(strArray[2]));
         System.out.println("=========================");
         System.out.println( strArray[0] == strArray[1]);
         System.out.println( strArray[0] == strArray[2]);
