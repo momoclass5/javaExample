@@ -1,13 +1,54 @@
 package d_array.practice;
 
 public class ArrayEx {
+    public void array_error() {
+        // 자동으로 방을 초기화
+        // 정수 0, 0.0, false, null
+        int[] lotto = new int[6];
+        // 향상된 for문
+        // 배열의 시작부터 끝까지 하나씩 꺼내서 변수에 담고 코드블럭을 실행
+        // for(타입 변수명:배열변수명)
+        for(int i : lotto){
+            System.out.println("i=" + i);
+        }
 
+        for(int i=0; i <= lotto.length; i++ ){
+            //lotto[6];
+            // ArrayIndexOutOfBoundsException
+            // lotto.length는 방의 갯수와 동일
+            // index는 0부터 시작 하므로 오류가 발생 lotto[lotto.length]
+            System.out.println(lotto[i]);
+        }
+
+    
+    }
+    
     public void lotto(){
         // 무작위 수를 추출해서 배열에 담아봅시다
+        // 정수 6개가 저장될 공간을 만드시오 변수명은 lotto로 한다!
+        // 각 방에는 랜덤함수를 이용해서 1~47까지의 수를 추출하여 수를 저장 한다
+        int[] lotto = new int[6];
+
+        lotto[0] = (int)(Math.random()*47) + 1;
+        lotto[1] = (int)(Math.random()*47) + 1;
+        lotto[2] = (int)(Math.random()*47) + 1;
+        lotto[3] = (int)(Math.random()*47) + 1;
+        lotto[4] = (int)(Math.random()*47) + 1;
+        lotto[5] = (int)(Math.random()*47) + 1;
+
+        // 배열이름.length : 배열의 길이를 반환 = 방의 갯수
+        System.out.println("lotto.length : " + lotto.length);
+        // 0 ~ 5
+        //for(int i=0; i<6;i++){
+        for(int i=0; i<lotto.length; i++){
+            System.out.println(lotto[i]);
+        }
+
+
     }
 
     /**
-     * Arrat (배열)
+     * Array (배열)
      *  - 길이가 정해져 있다
      *  - 같은타입만 저장 가능
      */
