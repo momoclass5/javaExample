@@ -1,6 +1,70 @@
 package d_array.practice;
 
 public class ArrayEx {
+
+    
+
+    public void lotto2() {
+        // 배열의 합계를 구해줘
+        sum(new int[]{1,2,3,4,5});
+
+
+
+        // 정수 20개를 저장할수 있는 배열을 생성
+        int[] arr = new int[20];
+        // i = 0 ~ 19 20번 실행
+        for(int i=0;i<arr.length;i++){
+            // 배열에 (1~100)무작위 수를 대입
+            arr[i] = (int)(Math.random()*100)+1;
+        }
+        // 배열에 값을 출력
+        int sum = 0;
+        for(int num : arr){
+            System.out.println(num);
+            sum += num;
+        }
+        System.out.println("합계 : " + sum);
+
+        // 배열의 값의 합을 출력
+        sum(arr);
+
+        printStr("test");
+    }
+
+    public void printStr(String str) {
+        System.out.println(str);
+        
+    }
+    public void sum(int[] array) {
+        System.out.println("배열의 총 합계를 구합니다.");
+        // 반복문을 이용해서 배열을 돌면서 값을 가지고 와서 
+        // 배열에 들어있는 숫자들의 합을 출력
+        int sum=0;
+        for(int num : array){
+            sum+=num; // sum = sum + num;
+        }
+        System.out.println("총 합계 : " + sum);
+    }
+
+    public void lotto1() {
+        // 정수 6개를 저장할수 있는 배열을 생성
+        int[] lotto = new int[6];
+
+        // 배열에 값을 저장
+        // lotto[0] ~ lotto[5]
+        for(int i=0; i<lotto.length; i++){
+            // 1 ~ 47중 무작위수를 추출하고 배열에 담아줍니다
+            lotto[i] = (int)(Math.random() * 47) + 1;
+        }
+
+        // 배열의 값을 출력
+        System.out.println("로또 자동 생성기");
+        for(int i : lotto){
+            System.out.print(i + " ");
+        }
+
+    }
+
     public void array_error() {
         // 자동으로 방을 초기화
         // 정수 0, 0.0, false, null
