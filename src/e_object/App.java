@@ -23,22 +23,32 @@ import e_object.practice.Student;
  */
 public class App {
     public static void main(String[] args) {
-        Student s1 = new Student("1", "김윤상", 20);
+        String str = "123456-1234567";
+        // 인덱스부터 끝까지 출력
+        System.out.println(str.substring(7));
+        // beginIndex 포함, endIndex 포함하지 않음
+        System.out.println(str.substring(7, 8));
+        // Student s1 = new Student("1", "김윤상", 20);
 
-        Student s2 = new Student();
-        s2.setNo("2");
-        s2.setName("백지연");
-        s2.setAge(21);
+        // Student s2 = new Student();
+        // s2.setNo("2");
+        // s2.setName("백지연");
+        // s2.setAge(21);
 
-        Student s3 = new Student("3", "박근민", 20);
+        // Student s3 = new Student("3", "박근민", 20);
 
-        System.out.println(s1.info());
-        System.out.println(s2.info());
-        System.out.println(s3.info());
+        // System.out.println(s1.info());
+        // System.out.println(s2.info());
+        // System.out.println(s3.info());
 
         // 1 김윤상 20
         // 2 백지연 21
         // 3 박근민 20
+
+        // ClassMate를 생성하고
+        // 학생을 추가해봅시다
+
+        // 등록된 학생을 출력해봅시다
 
     }
 
