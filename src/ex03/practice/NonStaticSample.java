@@ -93,4 +93,21 @@ public class NonStaticSample {
         // 시작인덱스는 포함되고 끝인덱스는 포함되지 않는다
         return str.substring(index1, index2);
     }
+
+    /**
+     * 매개변수의 갯수가 정확하지 않은경우
+     * 
+     * @param values
+     */
+    public void method1(int... values) {
+        System.out.println(Arrays.toString(values));
+    }
+
+    public void method2(int[] values) {
+        System.out.println(Arrays.toString(values));
+    }
+
+    public void method1(String... values) {
+        System.out.println(Arrays.toString(values));
+    }
 }

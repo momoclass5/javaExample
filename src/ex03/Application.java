@@ -13,5 +13,10 @@ public class Application extends Object {
         nss.outputChar(10, 'a');
         System.out.println();
         System.out.println(nss.mySubstring("apple", 2, 5));
+
+        nss.method1(1, 2, 3, 4, 5);
+        nss.method1(1, 2, 3);
+        nss.method2(new int[] { 1, 2, 3, 4, 5 });
+        nss.method3("일", "이", "삼");
     }
 }
