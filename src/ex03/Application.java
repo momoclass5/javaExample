@@ -17,6 +17,6 @@ public class Application extends Object {
         nss.method1(1, 2, 3, 4, 5);
         nss.method1(1, 2, 3);
         nss.method2(new int[] { 1, 2, 3, 4, 5 });
-        nss.method3("일", "이", "삼");
+        nss.method1("일", "이", "삼");
     }
 }
