@@ -9,6 +9,9 @@ public class Application extends Object {
         // 반환타입이 없는 메서드는 출력할 수 없음
         // 실행하고 끝!!!!!!
         nss.printLottoNumbers();
-        System.out.println(nss.toString());
+
+        nss.outputChar(10, 'a');
+        System.out.println();
+        System.out.println(nss.mySubstring("apple", 2, 5));
     }
 }
