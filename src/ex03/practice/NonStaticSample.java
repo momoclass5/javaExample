@@ -4,6 +4,8 @@ import java.util.Arrays;
 
 public class NonStaticSample {
 
+    public static double nonstatic_pi = 3.14;
+
     public void printLottoNumbers() {
         // 1~45까지의 임의의 정수 6개가 중복되지 않게 발생시켜 출력하는 메소드
         int[] lotto = new int[6];
