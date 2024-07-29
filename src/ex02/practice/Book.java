@@ -1,5 +1,8 @@
 package ex02.practice;
 
+import lombok.Data;
+
+@Data
 public class Book {
     private String title;
     private int price;
