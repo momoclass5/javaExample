@@ -25,7 +25,11 @@ public class Library {
 
     // 메뉴 출력
     public void showMenu() {
+
         while (true) {
+            // 도서 목록 출력
+            System.out.println(this.toString());
+
             System.out.println("====================");
             System.out.println("메뉴");
             System.out.println("====================");
@@ -49,8 +53,12 @@ public class Library {
                     returnBook();
                     break;
                 case 3:
+                    // 도서 삽입
+                    insertBook();
                     break;
                 case 4:
+                    // 도서 삭제
+                    deleteBook();
                     break;
                 case 9:
                     System.out.println("프로그램을 종료 합니다.");
@@ -64,10 +72,47 @@ public class Library {
         }
     }
 
+    private void deleteBook() {
+        int bookNo = ScannerUtil.getInt("삭제할 도서번호를 입력");
+        if (bookList[bookNo] != null) {
+            String title = bookList[bookNo].getTitle();
+            bookList[bookNo] = null;
+            System.out.println(title + " 도서가 삭제되었습니다.");
+        } else {
+            System.out.println("도서가 존재하지 않습니다.");
+        }
+    }
+
+    private void insertBook() {
+        // 배열에 빈방이 있는지 확인
+        int index = -1;
+        // 10 : 0-9
+        for (int i = 0; i < bookList.length; i++) {
+            if (bookList[i] == null) {
+                index = i;
+                break;
+            }
+        }
+        // 빈방이 없는경우
+        if (index < 0) {
+            System.out.println("도서를 추가할 수 없습니다.");
+            return;
+        }
+
+        System.out.println("도서 추가 ======");
+        // 도서명, 도서번호, 도서작가
+        int no = ScannerUtil.getInt("도서번호");
+        String title = ScannerUtil.getString("도서명");
+        String author = ScannerUtil.getString("작가");
+
+        // 배열에 새로운 책을 추가!
+        bookList[index] = new Book(no, title, author);
+        System.out.println("도서등록!!!!!!");
+
+    }
+
     // 도서 대여
     public void rentBook() {
-        // 도서 목록 출력
-        System.out.println(this.toString());
 
         int bookNo = 0;
         while (true) {
@@ -102,11 +147,21 @@ public class Library {
 
     // 도서반납
     public void returnBook() {
-        System.out.println("도서번호를 입력해주세요");
+
         // 스캐너로 번호(인덱스)를 입력 받는다
+        int bookNo = ScannerUtil.getInt("도서번호를 입력해주세요");
+
         // 해당 인덱스에 있는 도서의 상태가 대여중이면
-        // 도서의 상태를 반납(false)으로 변경
-        // 아니면 메세지 처리를 하고 (이미 대여중입니다.)
+        Book book = bookList[bookNo];
+
+        if (book.isRent()) {
+            // 도서의 상태를 반납(false)으로 변경
+            book.setRent(false);
+            System.out.println("반납 완료!!!");
+        } else {
+            // 아니면 메세지 처리를 하고 (이미 대여중입니다.)
+            System.out.println("반납 가능한 상태가 아닙니다.");
+        }
 
     }
 

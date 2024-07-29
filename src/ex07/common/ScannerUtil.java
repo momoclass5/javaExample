@@ -34,7 +34,8 @@ public class ScannerUtil {
         // return num;
     }
 
-    public static String getString() {
+    public static String getString(String str) {
+        System.out.print(str + " : ");
         return scan.nextLine();
     }
 

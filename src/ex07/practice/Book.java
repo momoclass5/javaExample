@@ -20,6 +20,7 @@ public class Book {
         this.author = author;
         // 도서관이 생성되면서 새로만든 책은 대여가 가능한 상태
         rent = false;
+        rent_str = "";
     }
 
     public void setRent(boolean rent) {
@@ -27,6 +28,8 @@ public class Book {
 
         if (rent) {
             rent_str = "대여중";
+        } else {
+            rent_str = "";
         }
     }
 }
