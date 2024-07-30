@@ -12,6 +12,7 @@ public class Library {
 
     public Library() {
         // 리스트에 5권의 책을 생성
+
         // 책을 생성
         Book book = new Book(1, "제목1", "작가1");
         // 리스트에 추가
