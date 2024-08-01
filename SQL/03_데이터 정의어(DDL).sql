@@ -310,15 +310,33 @@ COMMIT;
 --           RENT_BOOK_NO(대여 도서번호) -- 외래 키(TB_BOOK와 참조)
 --                                      이때 부모 데이터 삭제 시 NULL 값이 되도록 옵션 설정
 --           RENT_DATE(대여일) -- 기본값 SYSDATE
-SELECT * FROM TB_BOOK;
+-- 부모
 SELECT * FROM TB_PUB;
+-- 자식 
+SELECT * FROM TB_BOOK;
+
+
 SELECT * FROM MEMBER;
+
+DESC TB_BOOK; 
+--B00001
+SELECT * FROM TB_BOOK;
+DESC MEMBER;
+--ID
+SELECT * FROM MEMBER;
+INSERT INTO MEMBER (ID, PW, NAME) VALUES ('ID', 'PW', 'NAME');
+DROP TABLE TB_RENT;
+-- 외래키제약조건을 추가 할때 컬럼의 이름이 같지 않아도 된다
+-- 자식테이블을 입력에 제한을 받는다!!!!!!!
 CREATE TABLE TB_RENT(
     RENT_NO         CHAR(6) PRIMARY KEY
-    , RENT_MEM_NO   CHAR(6)
-    , RENT_BOOK_NO  CHAR(6)
+    -- MEMBER - 참조하는 테이블의 컬럼의 타입과 동일하게 지정
+    , RENT_MEM_NO   VARCHAR2(20) REFERENCES MEMBER(ID)
+    -- BOOK
+    , RENT_BOOK_NO  CHAR(6) REFERENCES TB_BOOK(NO)
     , RENT_DATE     DATE    DEFAULT SYSDATE
 );
+INSERT INTO TB_RENT (RENT_NO, RENT_BOOK_NO, RENT_MEM_NO) VALUES ('R00001', 'B00001', 'ID1');
 INSERT INTO TB_RENT (RENT_NO) VALUES ('R00001');
 -- 시퀀스 생성 SEQ_TB_RENT
 CREATE SEQUENCE SEQ_TB_RENT;
@@ -410,3 +428,40 @@ SELECT * FROM MEMBER;
 SELECT * FROM MEMBER_GRADE;
 
 -- 무결성 : 데이터의 정확성과 일관성이 유지되고, 데이터에 결손과 부정합이 없음을 보증 하는것
+SELECT * FROM TB_BOOK;
+DESC TB_BOOK;
+SELECT * FROM TB_PUB;
+DESC TB_PUB;
+
+DROP TABLE TB_BOOK;
+CREATE TABLE TB_BOOK(
+    NO          CHAR(6)          CONSTRAINT PK_TB_BOOK_NO        PRIMARY KEY
+    , TITLE     VARCHAR2(100)   CONSTRAINT NN_TB_BOOK_TITLE     NOT NULL
+    , AUTHOR    VARCHAR2(30)    CONSTRAINT NN_TB_BOOK_AUTHOR    NOT NULL
+    , PRICE     NUMBER          CONSTRAINT CK_TB_BOOK_PRICE     CHECK(PRICE > 0)
+    , RENTYN    CHAR(1)         DEFAULT 'N' 
+                                CONSTRAINT CK_TB_BOOK_RENTYN    CHECK(RENTYN IN('Y','N'))             
+    -- 외래키제약조건
+    , PUB_NO    CHAR(6)         REFERENCES TB_PUB(PUB_NO)
+);
+
+-- 외래키 제약조건에 의해 TB_PUB테이블의 PUB_NO 에 등록된 값만 입력 할 수 있다
+INSERT INTO TB_BOOK VALUES ('B00001', '제목', '작가', 20000, 'N', 'P00001');
+-- 부모테이블에 입력된 값이 아니면 오류 발생
+INSERT INTO TB_BOOK VALUES ('B00001', '제목', '작가', 20000, 'N', 'P00');
+
+
+-- DELETE문이나 UPDATE문을 사용할경우
+-- 조건을 주지 않으면 테이블의 모든 데이터를 삭제되거나 업데이트됨
+-- 건수를 확인 하고 실행!!!!!!!!!!!!!
+-- 만약 건수가 잘못 되었다 싶으면 롤백!!
+ROLLBACK;
+SELECT * FROM TB_BOOK;
+
+DELETE BOOK;
+DELETE FROM BOOK;
+
+
+
+
+SELECT * FROM EMP;
