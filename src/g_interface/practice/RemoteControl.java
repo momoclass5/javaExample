@@ -1,4 +1,4 @@
-package ex09.practice;
+package g_interface.practice;
 
 // 인터페이스 선언부
 // 생성자를 가질수 없다

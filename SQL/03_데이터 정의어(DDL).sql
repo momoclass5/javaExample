@@ -185,3 +185,228 @@ CREATE TABLE MEMBER(
     , AGE NUMBER CHECK(AGE > 0)
     , CONSTRAINT PK_MEMBER_ID UNIQUE(ID)
 );
+
+-- 정상
+INSERT INTO MEMBER (ID, PW, NAME, DELYN, GENDER, AGE) 
+                VALUES ('ID', 'PW', '홍홍홍', 'Y', 'M', 10);
+
+-- 오류
+-- AGE는 0보타 큰값이 입력되어야 하고
+-- GENDER 는 M,F만 입력 가능
+-- ID는 중복 될 수 없다
+INSERT INTO MEMBER (ID, PW, NAME, DELYN, GENDER, AGE) 
+                VALUES ('ID', 'PW', '홍홍홍', 'Y', 'A', -10);
+
+
+/*
+    <PRIMARY KEY(기본 키) 제약조건>
+        테이블에서 한 행의 정보를 식별하기 위해 사용할 컬럼에 부여하는 제약조건이다.
+        각 행들을 구분할 수 있는 식별자 역할(사번, 부서 코드, 직급 코드, ..)
+        기본 키 제약조건을 설정하게 되면 자동으로 해당 컬럼에 
+        NOT NULL + UNIQUE 제약조건이 설정된다.
+        한 테이블에 한 개만 설정할 수 있다.(단, 한 개 이상의 컬럼을 묶어서 PRIMARY KEY로 제약조건을 설정할 수 있다.)
+        컬럼 레벨, 테이블 레벨 방식 모두 설정 가능하다.
+*/
+
+CREATE TABLE MEMBER(
+    NO NUMBER
+    , ID VARCHAR2(20) NOT NULL
+    , PW VARCHAR2(20) CONSTRAINT NN_MEMBER_PW NOT NULL
+    , NAME VARCHAR2(20) CONSTRAINT NN_MEMBER_NAME NOT NULL
+    , REGDATE  DATE DEFAULT SYSDATE -- 기본값
+    , DELYN CHAR(1) CONSTRAINT CHECK_MEMBER_DELYN CHECK(DELYN IN ('Y', 'N'))
+    , GENDER CHAR(1) CHECK(GENDER IN ('M', 'F'))
+    , AGE NUMBER CHECK(AGE > 0)
+    -- 복합키 : 두 컬럼을 묶어서 하나의 기본키를 생성
+    -- 테이블레벨로 설정이 가능
+    , CONSTRAINT PK_MEMBER_ID PRIMARY KEY(ID, NO)
+);
+
+-- 도서들에 대한 데이터를 담기 위한 도서 테이블 (TB_BOOK)
+--  1) 컬럼 : NO (도서번호) -- 기본 키       
+--           TITLE (도서명) -- NOT NULL
+--           AUTHOR(저자명) -- NOT NULL
+--           PRICE(가격)    -- > 0
+--           RENTYN         -- Y/N
+--           PUB_NO(출판사 번호) -- 외래 키(TB_PUBLISHER 테이블을 참조하도록)
+--                                    이때 참조하고 있는 부모 데이터 삭제 시 자식 데이터도 삭제 되도록 옵션 지정
+CREATE TABLE TB_BOOK(
+    NO          CHAR(6)          CONSTRAINT PK_TB_BOOK_NO        PRIMARY KEY
+    , TITLE     VARCHAR2(100)   CONSTRAINT NN_TB_BOOK_TITLE     NOT NULL
+    , AUTHOR    VARCHAR2(30)    CONSTRAINT NN_TB_BOOK_AUTHOR    NOT NULL
+    , PRICE     NUMBER          CONSTRAINT CK_TB_BOOK_PRICE     CHECK(PRICE > 0)
+    , RENTYN    CHAR(1)         DEFAULT 'N' 
+                                CONSTRAINT CK_TB_BOOK_RENTYN    CHECK(RENTYN IN('Y','N'))             
+    , PUB_NO    NUMBER
+);
+
+DROP TABLE TB_BOOK;
+-- 자동형변환 되어서 입력이 됩니다.
+-- B00001
+-- 일련번호 : 자동으로 1씩 증가하는 숫자
+INSERT INTO TB_BOOK (NO, TITLE, AUTHOR, PRICE, PUB_NO) 
+            VALUES ('1', 'BOOK1', 'AUTHOR1', 10000, 1);
+
+-- 코드값을 생성할때 자릿수를 맞추기 위해서 함수를 사용할 수 있다
+SELECT 'B' || LPAD( SEQ_TB_BOOK.NEXTVAL ,5,'0')
+FROM DUAL;
+
+-- 시퀀스를 통해서 데이터를 생성
+INSERT INTO TB_BOOK (NO, TITLE, AUTHOR, PRICE, PUB_NO) 
+            VALUES ('B' || LPAD( SEQ_TB_BOOK.NEXTVAL ,5,'0')
+                                        , 'BOOK1', 'AUTHOR1', 10000, 1);
+SELECT * FROM TB_BOOK;
+-- 일련번호 생성기
+-- 1부터 시작하는 1씩 증가하는
+CREATE SEQUENCE SEQ_TB_BOOK;
+-- 시퀀스 삭제
+DROP SEQUENCE SEQ_TB_BOOK;
+-- NEXTVAL : 다음값
+-- CURRVAL : 현재값 (NEXTVAL 사용 이후 사용가능 - 생성후 바로 사용하지 못함)
+SELECT SEQ_TB_BOOK.CURRVAL, SEQ_TB_BOOK.NEXTVAL
+FROM DUAL;
+
+-- 도서등록 5권
+
+-- 1. 출판사들에 대한 데이터를 담기 위한 출판사 테이블(TB_PUB) 
+--  1) 컬럼 : PUB_NO(출판사 번호) -- 기본 키 - CHAR(6)
+--           PUB_NAME(출판사명) -- NOT NULL
+--           PHONE(출판사 전화번호) -- 제약조건 없음
+--           DELYN(삭제여부) -- Y/N
+--           REGDATE(등록일) -- 기본값 : 오늘날자
+CREATE TABLE TB_PUB (
+    PUB_NO      CHAR(6)         CONSTRAINT PK_TB_PUB_NO     PRIMARY KEY
+    , PUB_NAME  VARCHAR2(60)    CONSTRAINT NN_TB_PUB_NAME   NOT NULL
+    , PHONE     NUMBER
+    , DELYN     CHAR(1)         DEFAULT 'N' CONSTRAINT CK_TB_PUB_DELYN  CHECK (DELYN IN ('Y','N'))
+    , REGDATE   DATE            DEFAULT SYSDATE
+);
+DROP TABLE TB_PUB;
+-- 모든 컬럼에 데이터를 입력할 경우 컬럼명을 생략 할 수 있다
+INSERT INTO TB_PUB VALUES('P00001', '출판사명', 02123456, 'N', SYSDATE);
+INSERT INTO TB_PUB (PUB_NO, PUB_NAME) VALUES('P00002', '출판사명2');
+SELECT * FROM TB_PUB;
+-- 2. 일련번호 
+--      SEQ_TB_PUB
+CREATE SEQUENCE SEQ_TB_PUB;
+-- SEQ_TB_PUB.NEXTVAL를 5자리로 만들고 남은 공간을 0으로 채워줘
+SELECT 'P' || LPAD(SEQ_TB_PUB.NEXTVAL, 5, '0') FROM DUAL;
+--      P00001
+
+INSERT INTO TB_PUB (PUB_NO, PUB_NAME) 
+        VALUES('P' || LPAD(SEQ_TB_PUB.NEXTVAL, 5, '0'), '출판사명'||SEQ_TB_PUB.NEXTVAL);
+
+INSERT INTO TB_PUB (PUB_NO, PUB_NAME) 
+        VALUES('P' || LPAD(SEQ_TB_PUB.NEXTVAL, 5, '0'), '출판사명'||SEQ_TB_PUB.CURRVAL);
+
+SELECT * FROM TB_PUB;
+
+COMMIT;
+
+-- 4. 도서를 대여한 회원에 대한 데이터를 담기 위한 대여 목록 테이블(TB_RENT)
+--  1) 컬럼 : RENT_NO(대여번호) -- 기본 키
+--           RENT_MEM_NO(대여 회원번호) -- 외래 키(TB_MEMBER와 참조)
+--                                      이때 부모 데이터 삭제 시 NULL 값이 되도록 옵션 설정
+--           RENT_BOOK_NO(대여 도서번호) -- 외래 키(TB_BOOK와 참조)
+--                                      이때 부모 데이터 삭제 시 NULL 값이 되도록 옵션 설정
+--           RENT_DATE(대여일) -- 기본값 SYSDATE
+SELECT * FROM TB_BOOK;
+SELECT * FROM TB_PUB;
+SELECT * FROM MEMBER;
+CREATE TABLE TB_RENT(
+    RENT_NO         CHAR(6) PRIMARY KEY
+    , RENT_MEM_NO   CHAR(6)
+    , RENT_BOOK_NO  CHAR(6)
+    , RENT_DATE     DATE    DEFAULT SYSDATE
+);
+INSERT INTO TB_RENT (RENT_NO) VALUES ('R00001');
+-- 시퀀스 생성 SEQ_TB_RENT
+CREATE SEQUENCE SEQ_TB_RENT;
+SELECT 'R' || LPAD(SEQ_TB_RENT.NEXTVAL, 5, '0') FROM DUAL;
+INSERT INTO TB_RENT VALUES ('R' || LPAD(SEQ_TB_RENT.NEXTVAL, 5, '0') , 'A', 'B', SYSDATE);
+SELECT * FROM TB_RENT;
+
+
+/*
+    <FOREIGN KEY(외래 키) 제약조건>
+        다른 테이블에 존재하는 값만을 가져야 하는 컬럼에 부여하는 제약조건이다.(단, NULL 값도 가질 수 있다.)
+        즉, 참조된 다른 테이블이 제공하는 값만 기록할 수 있다. (FOREIGN KEY 제약조건에 의해서 테이블 간에 관계가 형성된다.)
+        
+        [표현법]
+            1) 컬럼 레벨
+                컬럼명 자료형(크기) [CONSTRAINT 제약조건명] REFERENCES 참조할테이블명 [(기본키)] [삭제룰]
+                
+            2) 테이블 레벨
+                [CONSTRAINT 제약조건명] FOREIGN KEY(컬럼명) REFERENCES 참조할테이블명 [(기본키)] [삭제룰]
+                
+        [삭제룰]
+            부모 테이블의 데이터가 삭제됐을 때의 옵션을 지정해 놓을 수 있다.
+            1) ON DELETE RESTRICT : (기존적으로 적용되는 옵션)
+                자식 테이블의 참조 키가 부모 테이블의 키 값을 참조하는 경우 부모 테이블의 행을 삭제할 수 없다. 
+            2) ON DELETE SET NULL : 부모 테이블의 데이터가 삭제 시 참조하고 있는 자식 테이블의 컬럼 값이 NULL로 변경된다.
+            3) ON DELETE CASCADE  : 부모 테이블의 데이터가 삭제 시 참조하고 있느 자식 테이블의 컴럼 값이 존재하는 행 전체가 삭제된다.
+*/
+
+-- 회원등급 테이블
+-- MEMBER_GRADE(GRADE_CODE 기본키 숫자타입
+--                , GRADE_NAME 문자타입 30BYTE NOTNULL)
+-- 부모테이블
+CREATE TABLE MEMBER_GRADE(
+    GRADE_CODE NUMBER PRIMARY KEY
+    , GRADE_NAME VARCHAR2(30) NOT NULL
+);
+INSERT INTO MEMBER_GRADE VALUES (10, '일반회원');
+INSERT INTO MEMBER_GRADE VALUES (20, '우수회원');
+INSERT INTO MEMBER_GRADE VALUES (30, '특별회원');
+
+SELECT * FROM MEMBER_GRADE;
+COMMIT;
+
+DROP TABLE MEMBER;
+-- 테이블 레벨
+CREATE TABLE MEMBER(
+    ID VARCHAR2(20) NOT NULL
+    , PW VARCHAR2(20) CONSTRAINT NN_MEMBER_PW NOT NULL
+    , NAME VARCHAR2(20) CONSTRAINT NN_MEMBER_NAME NOT NULL
+    , REGDATE  DATE DEFAULT SYSDATE -- 기본값
+    , DELYN CHAR(1) CONSTRAINT CHECK_MEMBER_DELYN CHECK(DELYN IN ('Y', 'N'))
+    , GENDER CHAR(1) CHECK(GENDER IN ('M', 'F'))
+    , AGE NUMBER CHECK(AGE > 0)
+    , CONSTRAINT PK_MEMBER_ID UNIQUE(ID)
+    , GRADE_CODE NUMBER
+    -- 제약조건이름 FOREIGN KEY(컬럼명) REFERENCES 테이블명(컬럼명)
+    , CONSTRAINT FK_MEMBER_GRADE_CODE FOREIGN KEY(GRADE_CODE) REFERENCES MEMBER_GRADE (GRADE_CODE) ON DELETE SET NULL
+);
+-- 컬럼레벨
+CREATE TABLE MEMBER(
+    ID VARCHAR2(20) NOT NULL
+    , PW VARCHAR2(20) CONSTRAINT NN_MEMBER_PW NOT NULL
+    , NAME VARCHAR2(20) CONSTRAINT NN_MEMBER_NAME NOT NULL
+    , REGDATE  DATE DEFAULT SYSDATE -- 기본값
+    , DELYN CHAR(1) CONSTRAINT CHECK_MEMBER_DELYN CHECK(DELYN IN ('Y', 'N'))
+    , GENDER CHAR(1) CHECK(GENDER IN ('M', 'F'))
+    , AGE NUMBER CHECK(AGE > 0)
+    , CONSTRAINT PK_MEMBER_ID UNIQUE(ID)
+    -- 제약조건이름 REFERENCES 테이블명(컬럼명)
+    , GRADE_CODE NUMBER CONSTRAINT FK_MEMBER_GRADE_CODE REFERENCES MEMBER_GRADE (GRADE_CODE) ON DELETE SET NULL
+);
+
+-- 부모테이블의 컬럼에 입력된 값만 입력이 가능
+
+-- 자식테이블에서 입력할때 오류가 발생 할 수 있다
+-- 부모테이블을 참조하고 있는경우 부모테이블에 입력된 데이터만 입력 가능
+INSERT INTO MEMBER (ID, PW, NAME, GRADE_CODE) VALUES ('ID', 'PW', '홍홍홍', 10);
+-- NULL 입력 가능
+INSERT INTO MEMBER (ID, PW, NAME, GRADE_CODE) VALUES ('ID1', 'PW', '홍홍홍', NULL);
+INSERT INTO MEMBER (ID, PW, NAME, GRADE_CODE) VALUES ('ID2', 'PW', '홍홍홍', 10);
+
+-- 외래키 재약조건을 사용중인 경우 자식이 존재하는경우 삭제 불가
+-- 부모테이블에 있는 데이터를 삭제 할때 오류가 발생 할 수 있다
+-- 자식이 참조하고 있는 데이터는 삭제불가 (기본) -> 옵션을 주어서 삭제할 수 있다
+--  옵션 : 1. 자식이 참조하고 있는 부모데이터를 NULL 로 업데이트
+--         2. 자식행을 함께 삭제
+DELETE MEMBER_GRADE WHERE GRADE_CODE = 10;
+SELECT * FROM MEMBER;
+SELECT * FROM MEMBER_GRADE;
+
+-- 무결성 : 데이터의 정확성과 일관성이 유지되고, 데이터에 결손과 부정합이 없음을 보증 하는것

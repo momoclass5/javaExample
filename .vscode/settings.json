@@ -3,7 +3,8 @@
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "c:\\Users\\human\\Downloads\\lombok.jar"
+        "c:\\Users\\human\\Downloads\\lombok.jar",
+        "c:\\Users\\human\\Downloads\\ojdbc8-23.4.0.24.05.jar"
     ],
     "terminal.integrated.automationProfile.linux": {}
 }

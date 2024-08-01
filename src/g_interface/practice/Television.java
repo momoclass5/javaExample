@@ -1,4 +1,4 @@
-package ex09.practice;
+package g_interface.practice;
 
 public class Television implements RemoteControl {
     private int volume;

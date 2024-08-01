@@ -1,12 +1,12 @@
-package ex09;
+package g_interface;
 
 import java.rmi.Remote;
 import java.util.ArrayList;
 import java.util.List;
 
-import ex09.practice.Audio;
-import ex09.practice.RemoteControl;
-import ex09.practice.Television;
+import g_interface.practice.Audio;
+import g_interface.practice.RemoteControl;
+import g_interface.practice.Television;
 
 public class Application {
     public static void main(String[] args) {
