@@ -133,9 +133,41 @@ SELECT  RPAD( SUBSTR(EMP_NO, 1, instr(EMP_NO, '-') + 1) , 14, '*')
         , RPAD( SUBSTR(EMP_NO, 1, 8) , 14, '*')
 FROM    emp;
 
+/*
+    5) LOWER / UPPER / INITCAP
+    - LOWER|UPPER|INITCAP (컬럼|'문자값')
+     LOWER : 모두 소문자로 변경
+     UPPER : 모두 대문자로 변경
+     INITCAP : 단어 앞 글자마다 대문자로 변경
+*/
+SELECT  LOWER('ABCD'), UPPER('abcd'), INITCAP('abcd abcd')
+FROM    dual;
 
+/*
+    6) CONCAT
+    - CONCAT(컬럼|'문자열', 컬럼|'문자열')   ==   ||
+    - 문자데이터 두개를 전달 받아서 하나로 합친후 결과를 반환
+*/
+-- 인수는 2개만 넣어줄 수 있다 
+-- ======> 3개 이상 넣을경우 인수의 갯수가 부적합합니다 오류 발생
+SELECT  CONCAT(CONCAT('hello', 'world'), ' wow!')
+FROM    dual;
+/*
+    7) REPLACE : 치환, 바꾸기
+    - REPLACE(컬럼|'문자값', 변경하려는 문자, 변경하고자 하는 문자)
+    - 컬럼, 문자값에서 변경하고자 하는 문자를 변경하려는 문자로 변경하여 반환
+*/
+SELECT  replace('서울시 강남구 역삼동', '역삼동', '삼성동')
+FROM    dual;
 
-
+select * from emp;
+-- 'sun_di@or.kr' 이메일 주소의 or.kr을 gmail.com 으로 변경하여 조회 해봅시다
+-- 사원명, 이메일주소, 변경된 이메일주소
+-- 함수를 이용한다고 해서 데이터가 변하는것은 아니다!!!!
+-- 결과집합(조회결과)의 데이터만 변경되서 보여진다!!!!!
+-- 쿼리는 대소문자를 구분하지 않지만 데이터는 구분한다!!!!!
+SELECT  EMP_NAME, EMAIL, REPLACE(EMAIL, 'or.kr', 'gmail.com')
+FROM    EMP;
 
 
 
