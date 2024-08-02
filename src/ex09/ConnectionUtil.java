@@ -31,7 +31,7 @@ public class ConnectionUtil {
         return con;
     }
 
-    public void closeConnection(ResultSet rs, PreparedStatement pstmt, Connection con) {
+    public static void closeConnection(ResultSet rs, PreparedStatement pstmt, Connection con) {
         try {
             if (rs != null)
                 rs.close();
