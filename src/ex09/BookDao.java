@@ -31,7 +31,7 @@ public class BookDao {
         int res = 0;
 
         String sql = "INSERT INTO TB_BOOK (B_NO, TITLE, AUTHOR, P_NO) "
-                + "VALUES('B'||lpad( seq_tb_book.nextval,5,0), insertBook', '삽입테스트', 'P00003')";
+                + "VALUES('B'||lpad( seq_tb_book.nextval,5,0), 'insertBook', '삽입테스트', 'P00003')";
         try (
                 Connection con = ConnectionUtil.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(sql);) {
