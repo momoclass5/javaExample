@@ -7,13 +7,42 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * getBookList() : 도서 목록 조회
+ * insertBook() : 도서 등록
+ */
 public class BookDao {
     public static void main(String[] args) {
         BookDao dao = new BookDao();
-        List<Book> list = dao.getBookList();
-        for (Book book : list) {
-            System.out.println(book);
+
+        // for (int i = 0; i < 100; i++) {
+        int res = dao.insertBook();
+        System.out.println(res + "건 처리되었습니다.");
+
+        // }
+
+        // List<Book> list = dao.getBookList();
+        // for (Book book : list) {
+        // System.out.println(book);
+        // }
+    }
+
+    public int insertBook() {
+        int res = 0;
+
+        String sql = "INSERT INTO TB_BOOK (B_NO, TITLE, AUTHOR, P_NO) "
+                + "VALUES('B'||lpad( seq_tb_book.nextval,5,0), insertBook', '삽입테스트', 'P00003')";
+        try (
+                Connection con = ConnectionUtil.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(sql);) {
+            // insert, update, delete의 경우
+            // 몇건 처리되었는지 숫자로 반환
+            res = pstmt.executeUpdate();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
+        return res;
     }
 
     public List<Book> getBookList() {
