@@ -44,6 +44,10 @@ public class DBConnection {
                 System.out.println(book);
             }
 
+            // 자원해제
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (ClassNotFoundException e) {
             System.out.println("라이브러리가 추가 되었는지 확인해보세요!!");
             e.printStackTrace();
