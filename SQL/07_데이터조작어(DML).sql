@@ -1,22 +1,22 @@
 CREATE TABLE EMP_01(
-    EMP_ID NUMBER                   -- »ç¹ø
-    , EMP_NAME VARCHAR2(30)         -- »ç¿ø¸í
-    , DEPT_TITLE VARCHAR2(20)       -- ºÎ¼­¸í
+    EMP_ID NUMBER                   -- ì‚¬ë²ˆ
+    , EMP_NAME VARCHAR2(30)         -- ì‚¬ì›ëª…
+    , DEPT_TITLE VARCHAR2(20)       -- ë¶€ì„œëª…
 );
 
--- ¼­ºêÄõ¸® : Äõ¸®¾È¿¡ ¶Ç´Ù¸¥ Äõ¸®°¡ »ç¿ëµÇ´Â °æ¿ì
--- ¼­ºêÄõ¸®¸¦ ÀÌ¿ëÇÏ¿© »ðÀÔÇÒ °æ¿ì
--- VALUESÅ°¿öµå¸¦ »ç¿ëÇÏÁö ¾Ê¾Æ¿ä!
+-- ì„œë¸Œì¿¼ë¦¬ : ì¿¼ë¦¬ì•ˆì— ë˜ë‹¤ë¥¸ ì¿¼ë¦¬ê°€ ì‚¬ìš©ë˜ëŠ” ê²½ìš°
+-- ì„œë¸Œì¿¼ë¦¬ë¥¼ ì´ìš©í•˜ì—¬ ì‚½ìž…í•  ê²½ìš°
+-- VALUESí‚¤ì›Œë“œë¥¼ ì‚¬ìš©í•˜ì§€ ì•Šì•„ìš”!
 INSERT INTO EMP_01 (
-    -- DEPT_CODE : ºÎ¼­Å×ÀÌºíÀÇ ±âº»Å°
+    -- DEPT_CODE : ë¶€ì„œí…Œì´ë¸”ì˜ ê¸°ë³¸í‚¤
     SELECT  EMP_ID, EMP_NAME, DEPT_TITLE
-    -- ¿©·¯°³ÀÇ Å×ÀÌºíÀÌ ±â¼úµÉ ¼ö ÀÖ´Ù
+    -- ì—¬ëŸ¬ê°œì˜ í…Œì´ë¸”ì´ ê¸°ìˆ ë  ìˆ˜ ìžˆë‹¤
     FROM    EMP, DEPT
     WHERE   DEPT_CODE = DEPT_ID
 );
 
--- DML ¹®Àå ½ÇÇàÈÄ COMMIT / ROLLBACKÀ» ½ÇÇà ÇÕ´Ï´Ù
--- ½ÇÇàÇÏÁö ¾ÊÀº°æ¿ì, ¶ôÀÌ °É·Á¼­ ¹«ÇÑ ´ë±â¿¡ ºüÁú¼ö ÀÖ½À´Ï´Ù
+-- DML ë¬¸ìž¥ ì‹¤í–‰í›„ COMMIT / ROLLBACKì„ ì‹¤í–‰ í•©ë‹ˆë‹¤
+-- ì‹¤í–‰í•˜ì§€ ì•Šì€ê²½ìš°, ë½ì´ ê±¸ë ¤ì„œ ë¬´í•œ ëŒ€ê¸°ì— ë¹ ì§ˆìˆ˜ ìžˆìŠµë‹ˆë‹¤
 SELECT * FROM EMP_01;
 SELECT * FROM DEPT;
 
@@ -26,26 +26,26 @@ FROM    EMP;
 SELECT * FROM EMP_OLD;
 DROP TABLE EMP_OLD;
 
--- ¼­ºêÄõ¸®¸¦ ÀÌ¿ëÇØ¼­ Å×ÀÌºíÀ» º¹»ç ÇÏ´Â ¹æ¹ý
--- ±¸Á¶¿Í µ¥ÀÌÅÍ¸¦ ÇÔ²² »ý¼º ÇÏ±â
--- ±¸Á¶¸¸ »ý¼º ÇÏ±â = µ¥ÀÌÅÍ°¡ ¾ø´Â ºóÅ×ÀÌºí = FALSEÀÎ Á¶°ÇÀ» ÁÖ¸é ±¸Á¶¸¸ »ý¼º°¡´É
--- AS Å°¿öµå »ý·« ºÒ°¡
+-- ì„œë¸Œì¿¼ë¦¬ë¥¼ ì´ìš©í•´ì„œ í…Œì´ë¸”ì„ ë³µì‚¬ í•˜ëŠ” ë°©ë²•
+-- êµ¬ì¡°ì™€ ë°ì´í„°ë¥¼ í•¨ê»˜ ìƒì„± í•˜ê¸°
+-- êµ¬ì¡°ë§Œ ìƒì„± í•˜ê¸° = ë°ì´í„°ê°€ ì—†ëŠ” ë¹ˆí…Œì´ë¸” = FALSEì¸ ì¡°ê±´ì„ ì£¼ë©´ êµ¬ì¡°ë§Œ ìƒì„±ê°€ëŠ¥
+-- AS í‚¤ì›Œë“œ ìƒëžµ ë¶ˆê°€
 CREATE TABLE EMP_OLD
 AS SELECT   EMP_ID, EMP_NAME, HIRE_DATE, SALARY
     FROM    EMP
-    -- Å×ÀÌºíÀÇ ±¸Á¶¸¸ º¹»ç
+    -- í…Œì´ë¸”ì˜ êµ¬ì¡°ë§Œ ë³µì‚¬
     WHERE   1=0;
 
 CREATE TABLE EMP_NEW
 AS SELECT   EMP_ID, EMP_NAME, HIRE_DATE, SALARY
     FROM    EMP
-    -- Å×ÀÌºíÀÇ ±¸Á¶¸¸ º¹»ç
+    -- í…Œì´ë¸”ì˜ êµ¬ì¡°ë§Œ ë³µì‚¬
     WHERE   1=0;
 
 INSERT ALL
-    -- Á¶°ÇÀÌ ÀÏÄ¡ÇÏ¸é
+    -- ì¡°ê±´ì´ ì¼ì¹˜í•˜ë©´
     WHEN HIRE_DATE < '2000/01/01' THEN
-    -- ÀÔ·Â
+    -- ìž…ë ¥
     INTO EMP_OLD VALUES(EMP_ID, EMP_NAME, HIRE_DATE, SALARY)
     
     WHEN HIRE_DATE >= '2000/01/01' THEN
@@ -60,58 +60,58 @@ SELECT * FROM EMP_NEW;
 CREATE TABLE DEPT_COPY
 AS SELECT * FROM DEPT;
 
--- Á¶°ÇÀ» ÁÖÁö ¾ÊÀ¸¸é ¸ðµç Çà¿¡ Àû¿ëÀÌ µÊ
+-- ì¡°ê±´ì„ ì£¼ì§€ ì•Šìœ¼ë©´ ëª¨ë“  í–‰ì— ì ìš©ì´ ë¨
 UPDATE  DEPT_COPY
-SET     DEPT_TITLE = 'Àü·«±âÈ¹ÆÀ';
+SET     DEPT_TITLE = 'ì „ëžµê¸°íšíŒ€';
 
 SELECT * FROM DEPT_COPY;
 ROLLBACK;
 
 UPDATE  DEPT_COPY
-SET     DEPT_TITLE = 'Àü·«±âÈ¹ÆÀ'
+SET     DEPT_TITLE = 'ì „ëžµê¸°íšíŒ€'
 WHERE   DEPT_ID = 'D9';
 
--- ´ÜÀÏÇà ¾÷µ¥ÀÌÆ®
--- ¹æ¸í¼ö »ç¿øÀÇ ±Þ¿©¿Í º¸³Ê½ºÀ²À» À¯Àç½Ä »ç¿ø°ú µ¿ÀÏÇÏ°Ô º¯°æ
+-- ë‹¨ì¼í–‰ ì—…ë°ì´íŠ¸
+-- ë°©ëª…ìˆ˜ ì‚¬ì›ì˜ ê¸‰ì—¬ì™€ ë³´ë„ˆìŠ¤ìœ¨ì„ ìœ ìž¬ì‹ ì‚¬ì›ê³¼ ë™ì¼í•˜ê²Œ ë³€ê²½
 SELECT EMP_NAME, SALARY, BONUS
 FROM EMP
-WHERE EMP_NAME IN ( 'À¯Àç½Ä', '¹æ¸í¼ö');
+WHERE EMP_NAME IN ( 'ìœ ìž¬ì‹', 'ë°©ëª…ìˆ˜');
 
 UPDATE  EMP
-        -- ¼­ºêÄõ¸®¸¦ ÀÌ¿ëÇØ¼­ °ªÀ» ÁöÁ¤
-        -- ¼­ºêÄõ¸® ÀÌ¿ë½Ã °ýÈ£·Î ¹­¾î ÁÝ´Ï´Ù.
+        -- ì„œë¸Œì¿¼ë¦¬ë¥¼ ì´ìš©í•´ì„œ ê°’ì„ ì§€ì •
+        -- ì„œë¸Œì¿¼ë¦¬ ì´ìš©ì‹œ ê´„í˜¸ë¡œ ë¬¶ì–´ ì¤ë‹ˆë‹¤.
 SET     SALARY = (SELECT  SALARY
                     FROM    EMP
-                   WHERE   EMP_NAME='À¯Àç½Ä')
+                   WHERE   EMP_NAME='ìœ ìž¬ì‹')
         , BONUS = (SELECT  BONUS
                     FROM    EMP
-                    WHERE   EMP_NAME='À¯Àç½Ä')
-WHERE   EMP_NAME='¹æ¸í¼ö';
+                    WHERE   EMP_NAME='ìœ ìž¬ì‹')
+WHERE   EMP_NAME='ë°©ëª…ìˆ˜';
 
 SELECT  BONUS
 FROM    EMP
-WHERE   EMP_NAME='À¯Àç½Ä';
+WHERE   EMP_NAME='ìœ ìž¬ì‹';
 
 
--- ´ÙÁßÇà ´ÙÁß¿­ ¾÷µ¥ÀÌÆ®
--- ³ë¿ËÃ¶, ÀüÇüµ·, Á¤ÁßÇÏ, ÇÏµ¿¿îÀÇ ±Þ¿©¿Í º¸³Ê½º¸¦ À¯Àç½Ä »ç¿ø°ú µ¿ÀÏÇÏ°Ô º¯°æ
+-- ë‹¤ì¤‘í–‰ ë‹¤ì¤‘ì—´ ì—…ë°ì´íŠ¸
+-- ë…¸ì˜¹ì² , ì „í˜•ëˆ, ì •ì¤‘í•˜, í•˜ë™ìš´ì˜ ê¸‰ì—¬ì™€ ë³´ë„ˆìŠ¤ë¥¼ ìœ ìž¬ì‹ ì‚¬ì›ê³¼ ë™ì¼í•˜ê²Œ ë³€ê²½
 UPDATE  EMP
--- ´ÙÁß¿­ - ¿©·¯ÇàÀ» ÇÑ¹ø¿¡ Ã³¸®
+-- ë‹¤ì¤‘ì—´ - ì—¬ëŸ¬í–‰ì„ í•œë²ˆì— ì²˜ë¦¬
 SET     (SALARY, BONUS) = (SELECT  SALARY, BONUS
                             FROM    EMP
-                           WHERE   EMP_NAME='À¯Àç½Ä')
--- ´ÙÁßÇà - ¿©·¯ÁÙÀÌ Á¶È¸ µÇ¾îÁü
-WHERE   EMP_NAME IN ('³ë¿ËÃ¶', 'ÀüÇüµ·', 'Á¤ÁßÇÏ', 'ÇÏµ¿¿î')
+                           WHERE   EMP_NAME='ìœ ìž¬ì‹')
+-- ë‹¤ì¤‘í–‰ - ì—¬ëŸ¬ì¤„ì´ ì¡°íšŒ ë˜ì–´ì§
+WHERE   EMP_NAME IN ('ë…¸ì˜¹ì² ', 'ì „í˜•ëˆ', 'ì •ì¤‘í•˜', 'í•˜ë™ìš´')
 ;
 SELECT EMP_NAME, SALARY, BONUS
 FROM EMP
-WHERE   EMP_NAME IN ('³ë¿ËÃ¶', 'ÀüÇüµ·', 'Á¤ÁßÇÏ', 'ÇÏµ¿¿î');
+WHERE   EMP_NAME IN ('ë…¸ì˜¹ì² ', 'ì „í˜•ëˆ', 'ì •ì¤‘í•˜', 'í•˜ë™ìš´');
 
--- ¾Æ½Ã¾Æ Áö¿ª¿¡ ±Ù¹«ÇÏ´Â Á÷¿øÀÇ º¸³Ê½º¸¦ 0.3À¸·Î º¯°æ
+-- ì•„ì‹œì•„ ì§€ì—­ì— ê·¼ë¬´í•˜ëŠ” ì§ì›ì˜ ë³´ë„ˆìŠ¤ë¥¼ 0.3ìœ¼ë¡œ ë³€ê²½
 --SELECT  *
 UPDATE  EMP
 SET     BONUS = 0.3
--- ¼­ºêÄõ¸®¸¦ ÀÌ¿ëÇÑ Á¶È¸ Á¶°Ç
+-- ì„œë¸Œì¿¼ë¦¬ë¥¼ ì´ìš©í•œ ì¡°íšŒ ì¡°ê±´
 WHERE   EMP_ID IN (
                     SELECT  EMP_ID
                     FROM    EMP, DEPT D, LOCATION L
@@ -121,18 +121,18 @@ WHERE   EMP_ID IN (
 
 COMMIT;
 
--- ÃÑ¹«ºÎÀÇ º¸³Ê½º¸¦ 0À¸·Î ¾÷µ¥ÀÌÆ®
+-- ì´ë¬´ë¶€ì˜ ë³´ë„ˆìŠ¤ë¥¼ 0ìœ¼ë¡œ ì—…ë°ì´íŠ¸
 UPDATE  EMP
 SET     BONUS = 0
 WHERE   EMP_ID IN (
     SELECT  EMP_ID 
     FROM    EMP, DEPT
-    -- ÄÃ·³ÀÌ¸§ÀÌ ´Ù¸¥°æ¿ì Å×ÀÌºíÀÌ¸§À» ¸í½ÃÇÏÁö ¾Ê¾Æµµ µÊ
+    -- ì»¬ëŸ¼ì´ë¦„ì´ ë‹¤ë¥¸ê²½ìš° í…Œì´ë¸”ì´ë¦„ì„ ëª…ì‹œí•˜ì§€ ì•Šì•„ë„ ë¨
     WHERE   DEPT_CODE = DEPT_ID
-    AND     DEPT_TITLE = 'ÃÑ¹«ºÎ');
+    AND     DEPT_TITLE = 'ì´ë¬´ë¶€');
 
 
-DELETE EMP WHERE EMP_NAME='À¯Àç½Ä';
+DELETE EMP WHERE EMP_NAME='ìœ ìž¬ì‹';
 
 
 COMMIT;
