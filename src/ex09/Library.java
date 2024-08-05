@@ -38,14 +38,15 @@ public class Library {
             }
         } else {
             System.out.println("도서 삭제===========");
-
+            printBookList();
+            ScannerUtil.getString("삭제할 도서번호");
         }
     }
 
-    public void printBookList(){
+    public void printBookList() {
         List<Book> list = service.getBookList();
-        for(){
-            
+        for (Book book : list) {
+            System.out.println(book);
         }
     }
 }
