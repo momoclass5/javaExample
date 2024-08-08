@@ -267,17 +267,212 @@ AND     SALARY > ALL (SELECT  SALARY
                         JOIN    JOB USING (JOB_CODE)
                         WHERE   JOB_NAME = '차장');
 
-
-
 SELECT  SALARY
 FROM    EMP
 JOIN    JOB USING (JOB_CODE)
 WHERE   JOB_NAME = '차장';
 
+/*
+    <다중열 서브 쿼리>
+        조회 결과 값은 한 행이지만 나열된 컬럼 수가 여러 개일 때
+*/
+
+-- 다중열 서브쿼리를 작성 하는 방법
+-- 비교연산자도 사용이 가능( =, IN )
+
+SELECT  *
+FROM    EMP
+-- 다중열 : 여러개의 컬럼을 이용하여 조회
+WHERE   (JOB_CODE, DEPT_CODE) = (('J1', 'D9'));
+
+-- 1) 하이유 사원과 같은 부서 코드, 같은 직급 코드에 해당하는 사원들 조회
+-- 하이유 사원의 부서 코드와 직급 코드 조회 -- (D5, J5) 
+SELECT  JOB_CODE, DEPT_CODE
+FROM    EMP
+WHERE   EMP_NAME = '하이유';
+
+SELECT  *
+FROM    EMP
+-- 다중열 : 여러개의 컬럼을 이용하여 조회
+-- 갯수와 타입이 일치해야 합니다!
+WHERE   (JOB_CODE, DEPT_CODE) = ( SELECT  JOB_CODE, DEPT_CODE
+                                    FROM    EMP
+                                    WHERE   EMP_NAME = '하이유'  );
+
+
+-- 2) 박나라 사원과 직급 코드가 일치하면서 같은 사수를 가지고 있는 
+-- 사원의 사번, 이름, 직급 코드, 사수 사번 조회
+-- 박나라 사원의 직급 코드와 사수의 사번을 조회 -- (J7, 207)
+SELECT  JOB_CODE, MANAGER_ID
+FROM    EMP
+WHERE   EMP_NAME = '박나라';
+
+SELECT  EMP_ID, EMP_NAME, JOB_CODE, MANAGER_ID
+FROM    EMP
+WHERE   (JOB_CODE, MANAGER_ID) IN (SELECT  JOB_CODE, MANAGER_ID
+                                    FROM    EMP
+                                    WHERE   EMP_NAME = '박나라');
+
+
+/*
+    <다중행 다중열 서브 쿼리>
+    서브 쿼리의 조회 결과값이 여러 행, 여러 열일 경우
+*/
+SELECT  *
+FROM    EMP
+-- 다중행이 올 경우 IN을 이용!
+WHERE   (JOB_CODE, SALARY) IN (
+                                ('J2', '3700000'),
+                                ('J7', '1380000')
+                                );
+
+-- 1. 각 직급별로 최소 급여를 받는 사원들의 사번, 이름, 직급 코드, 급여 조회
+-- 각 직급별 최소 급여 조회
+SELECT  JOB_CODE, MIN(SALARY) 
+FROM    EMP
+GROUP BY JOB_CODE;
+
+SELECT  EMP_ID, EMP_NAME, JOB_CODE, SALARY
+FROM    EMP
+-- 다중행이 올 경우 IN을 이용!
+WHERE   (JOB_CODE, SALARY) IN (
+                                SELECT  JOB_CODE, MIN(SALARY) 
+                                FROM    EMP
+                                GROUP BY JOB_CODE
+                                );
+
+-- 2) 각 부서별 최소 급여를 받는 사원들의 사번, 이름, 부서명, 급여 조회
+-- 부서가 없는 사원은 부서없음으로 표시
+-- 각 부서별 최소 급여 조회
+SELECT  DEPT_CODE, MIN(SALARY)
+FROM    EMP
+GROUP BY DEPT_CODE;
+
+SELECT  EMP_ID, EMP_NAME, DEPT_CODE, SALARY 
+FROM    EMP
+-- NULL은 비교 대상이 되지 않으므로 제외됨
+WHERE   (NVL(DEPT_CODE, '부서없음'), SALARY) 
+                          IN (SELECT  NVL(DEPT_CODE, '부서없음'), MIN(SALARY)
+                                FROM    EMP
+                                GROUP BY DEPT_CODE);
+
+
+-- JOIN 을 이용해서 부서명을 조회
+-- 조인조건에 일지하지 않는 데이터도 모두 조회 하기 위해 OUTER JOIN 을 이용!!! 
+-- 기준을 잡아주세요!!
+
+-- ANSI
+SELECT  EMP_ID, EMP_NAME, NVL(DEPT_TITLE, '부서없음'), SALARY 
+FROM    EMP 
+LEFT JOIN    DEPT ON (DEPT_CODE = DEPT_ID)
+-- NULL은 비교 대상이 되지 않으므로 제외됨
+WHERE   (NVL(DEPT_CODE, '부서없음'), SALARY) 
+                          IN (SELECT  NVL(DEPT_CODE, '부서없음'), MIN(SALARY)
+                                FROM    EMP
+                                GROUP BY DEPT_CODE);
+-- ORACLE
+SELECT  EMP_ID, EMP_NAME, NVL(DEPT_TITLE, '부서없음'), TO_CHAR(SALARY, 'FM999,999,999')
+FROM    EMP, DEPT 
+-- NULL은 비교 대상이 되지 않으므로 제외됨
+WHERE   DEPT_CODE = DEPT_ID(+)
+AND     (NVL(DEPT_CODE, '부서없음'), SALARY) 
+                          IN (SELECT  NVL(DEPT_CODE, '부서없음'), MIN(SALARY)
+                                FROM    EMP
+                                GROUP BY DEPT_CODE);
+
+SELECT DEPT_TITLE FROM DEPT WHERE DEPT_ID=DEPT_CODE;
+
+SELECT  EMP_ID, EMP_NAME, 
+        -- 메인쿼리의 실행 결과 컬럼을 이용하여 조회
+        NVL((SELECT DEPT_TITLE FROM DEPT WHERE DEPT_ID=DEPT_CODE), '부서없음'), SALARY 
+FROM    EMP
+-- NULL은 비교 대상이 되지 않으므로 제외됨
+WHERE   (NVL(DEPT_CODE, '부서없음'), SALARY) 
+                          IN (SELECT  NVL(DEPT_CODE, '부서없음'), MIN(SALARY)
+                                FROM    EMP
+                                GROUP BY DEPT_CODE);
+
+/*
+    <인라인 뷰>
+        FROM 절에 서브 쿼리를 제시하고, 서브 쿼리를 수행한 결과를 테이블 대신 사용한다.
+    1) 인라인 뷰를 활용한 TOP-N분석
+*/
+-- 전 직원중 급여가 가장 높은 사람 5명을 순위, 이름, 급여 조회
+-- FROM -> SELECT(순번이 정해진다.) -> ORDER BY
+-- ROWNUM : 조회된 순서대로 번호를 붙여 줍니다
+--          ORDER BY절이 SELECT절 다음에 실행 되므로 ROWNUM이 붙고 난 후 정렬 
+-- 테이블의 이름을 명시적으로 써줘야 함 
+SELECT ROWNUM, EMP_NAME, SALARY--ROWNUM, T.*
+FROM(
+    SELECT  *
+    FROM    EMP
+    ORDER BY SALARY DESC
+    ) T
+WHERE ROWNUM <= 5
+;
+
+-- 2) 부서별 평균 급여가 높은 3개의 부서의 부서 코드, 평균 급여 조회
+
+WITH TOPN_SAL AS (
+                    SELECT  DEPT_CODE, FLOOR(AVG(SALARY)) SALARY
+                    FROM    EMP
+                    GROUP BY DEPT_CODE
+                    ORDER BY SALARY DESC )
+                    
+SELECT ROWNUM, DEPT_CODE, SALARY
+FROM TOPN_SAL
+WHERE ROWNUM <= 3;
 
 
 
 
+
+SELECT *
+FROM (
+    -- 정렬된 후 번호를 붙여 줍니다
+    SELECT ROWNUM RN, T.*
+    FROM    (SELECT  *
+            FROM    EMP
+            -- 페이징처리 - 부하를 줄이기 위해 10건씩 데이터를 조회
+            --WHERE   ROWNUM BETWEEN 2 AND 10
+            ORDER BY EMP_NAME) T
+    -- 쿼리실행순서가 SELECT보다 WHERE가 우선되므로 RN을 사용 할 수 없다
+    -- FROM -> WHERE -> SELECT -> ORDER BY
+    -- FROM -> JOIN -> WHERE -> GROUP BY -> HAVING -> SELECT -> ORDER BY
+    --WHERE RN BETWEEN 2 AND 10
+    )
+WHERE RN BETWEEN 11 AND 20;
+
+/*
+     <RANK 함수>
+        [표현법]
+            RANK() OVER(정렬 기준) / DENSE_RANK() OVER(정렬 기준)
+            DENSE_RANK() OVER(정렬 기준)   : 동일한 순위 이후의 등수를 무조건 1씩 증가한다.
+        - 동일한 값인 경우 동일한 순번을 부여
+        - 동일한 순위 이후 동일한 갯수만큼 건너 뛰고 순위를 부여
+        - 정렬기준을 여러개 두어 순위를 구분 할 수 있다 EX) 급여가 같으면 직급순으로
+*/
+SELECT * 
+FROM    (
+        SELECT  RANK() OVER(ORDER BY SALARY DESC) RN, EMP_NAME, SALARY
+        FROM    EMP
+        )
+-- WHERE 절에서 RANK() 사용이 불가능 하므로 인라인뷰로 만들어서 사용
+WHERE   RN <= 5;
+
+-- 그룹별 순위
+-- PARTITION BY : 그룹으로 묶어줌
+SELECT * FROM (
+    SELECT  RANK() OVER(PARTITION BY DEPT_CODE ORDER BY SALARY DESC) RN, DEPT_CODE, EMP_NAME, SALARY
+    FROM    EMP
+    )
+WHERE RN = 1;
+
+
+
+
+
+-- 페이징 처리에 사용되는 쿼리
 -- 쿼리의 실행순서에 의해 SELECT -> ORDER BY
 SELECT *
 FROM    (
@@ -291,7 +486,6 @@ FROM    (
          )
 WHERE   RN BETWEEN 11 AND 20
 ;
-
 
 
 
