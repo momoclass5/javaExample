@@ -221,6 +221,21 @@ RENAME DEPARTMENT TO DEPT;
 RENAME EMPLOYEE TO EMP;
 
 
+-- 총 급여의 합계, 부서별 급여의 합계, 부서별 직급의 급여의 합계
+-- 부서별 급여의 합계 
+-- 소계, 중계, 합계 
+SELECT  NVL(DEPT_CODE,'부서없음'), JOB_CODE, SUM(SALARY)
+        , CASE  WHEN GROUPING(DEPT_CODE) = 0 AND GROUPING(JOB_CODE) =1
+                THEN '부서별 합계'
+                WHEN GROUPING(DEPT_CODE) = 1 AND GROUPING(JOB_CODE) =1
+                THEN '총 합계'
+                ELSE ''
+                END 구분
+        -- GROUPING : 인자로 전달받은 컬럼 집합의 산출물이면 0 반환 아니면 1 반환
+        , GROUPING(DEPT_CODE), GROUPING(JOB_CODE) 
+        
+FROM    EMP
+GROUP BY ROLLUP(DEPT_CODE, JOB_CODE);
 
 
 
